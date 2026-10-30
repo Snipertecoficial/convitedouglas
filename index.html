@@ -128,25 +128,6 @@ section{position:relative;padding:clamp(72px,11vw,130px) 0}
 .deadline b{color:var(--gold-hi)}
 @media (max-width:860px){.details{grid-template-columns:1fr}}
 
-/* ===== Clima de festa ===== */
-.festa{background:radial-gradient(ellipse at 50% 0%,#1a150d,var(--bg) 60%)}
-.festa-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:20px;margin-top:44px;align-items:start}
-.panel{padding:24px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(180deg,#17130d,#100d09)}
-.panel h3{font-family:var(--serif);font-size:24px;font-weight:600;margin-bottom:6px}
-.panel .hint{color:var(--muted);font-size:14.5px;margin-bottom:16px}
-.yt[hidden]{display:none}
-.yt{position:relative;aspect-ratio:16/9;border-radius:14px;overflow:hidden;border:1px solid var(--line2);background:#000}
-.yt iframe,.yt>div{position:absolute;inset:0;width:100%;height:100%;border:0}
-.yt-cap{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:13.5px;color:var(--muted)}
-.yt-cap b{color:var(--gold-hi)}
-.wall{display:grid;gap:10px;max-height:520px;overflow:auto;padding-right:4px}
-.note{position:relative;padding:16px 18px 14px;border-radius:14px;background:rgba(214,175,96,.06);border:1px solid var(--line)}
-.note p{font-family:var(--body);font-size:20px;font-style:italic;line-height:1.35}
-.note small{display:block;margin-top:8px;font-size:12.5px;letter-spacing:.06em;color:var(--gold)}
-.note::before{content:"\201C";position:absolute;right:14px;top:-6px;font-family:var(--serif);font-size:54px;color:rgba(214,175,96,.25)}
-.wall .empty{padding:26px 10px;font-size:18px}
-@media (max-width:860px){.festa-grid{grid-template-columns:1fr}}
-
 /* ===== Lista ===== *//* ===== Lista ===== */
 .rsvp{background:radial-gradient(ellipse at 50% 0%,#1a150d,var(--bg) 55%)}
 .rsvp-head{display:flex;justify-content:space-between;align-items:end;gap:30px;flex-wrap:wrap}
@@ -260,8 +241,8 @@ footer .credit{margin-top:46px;font-size:12px;color:var(--dim);letter-spacing:.0
 #music.show{opacity:1;transform:none}
 .eq{display:flex;gap:3px;align-items:end;height:16px;width:18px}
 .eq i{width:3px;background:var(--gold);border-radius:2px;height:4px}
-.playing .eq i,.yt-cap.playing .eq i{animation:eq 1s ease-in-out infinite}
-.playing .eq i:nth-child(2){animation-delay:-.3s}.playing .eq i:nth-child(3){animation-delay:-.6s}.playing .eq i:nth-child(4){animation-delay:-.15s}
+#music.playing .eq i{animation:eq 1s ease-in-out infinite}
+#music.playing .eq i:nth-child(2){animation-delay:-.3s}#music.playing .eq i:nth-child(3){animation-delay:-.6s}#music.playing .eq i:nth-child(4){animation-delay:-.15s}
 @keyframes eq{50%{height:16px}}
 .toast{position:fixed;left:50%;top:18px;z-index:120;transform:translate(-50%,-30px);opacity:0;padding:14px 20px;border-radius:14px;background:#1c170f;border:1px solid var(--line2);font-size:14px;font-weight:600;transition:.4s;max-width:calc(100% - 32px)}
 .toast.on{opacity:1;transform:translate(-50%,0)}
@@ -402,29 +383,6 @@ footer .credit{margin-top:46px;font-size:12px;color:var(--dim);letter-spacing:.0
   </div>
 </section>
 
-<!-- CLIMA DE FESTA -->
-<section class="festa" id="festa">
-  <div class="wrap">
-    <div class="reveal" style="text-align:center">
-      <div class="eyebrow">Clima de festa</div>
-      <h2 class="h2" style="margin-top:14px">Aumenta o <span class="gold">som</span> 🎶</h2>
-    </div>
-    <div class="festa-grid">
-      <div class="panel reveal">
-        <h3>Trilha da festa</h3>
-        <p class="hint">Pra já ir entrando no clima.</p>
-        <div class="yt" hidden><div id="yt"></div></div>
-        <div class="yt-cap"><span class="eq"><i></i><i></i><i></i><i></i></span><span id="ytTitle"></span><button class="btn btn-line" id="trackBtn" style="margin-left:auto;min-height:40px;padding:8px 16px;font-size:13px">▶ Tocar</button></div>
-      </div>
-      <div class="panel reveal">
-        <h3>Mural de recados</h3>
-        <p class="hint">Os recados deixados na confirmação aparecem aqui.</p>
-        <div class="wall" id="wall"></div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <footer>
   <div class="wrap">
     <div class="sig gold">Te espero lá!</div>
@@ -452,9 +410,7 @@ const CONFIG = {
   eventEnd: "2026-11-07T20:00:00-03:00",
   deadline: "2026-11-01T23:59:59-03:00",
   address: "Rua dos Coqueiros, 709",
-  musicFile: "musica.mp3",       // coloque o arquivo de áudio com este nome na raiz do repositório
-  musicTitle: "Bruno Mars",      // texto mostrado na "Trilha da festa"
-  youtubeFallback: "OPf0YbXqDm0" // usado só se o musica.mp3 não existir (Uptown Funk — player oficial)
+  musicFile: "musica.mp3"   // se existir na raiz, toca este arquivo; senão toca o instrumental funk gerado pela página
 };
 
 const GUESTS = [
@@ -520,55 +476,98 @@ document.querySelectorAll(".reveal").forEach(el => io.observe(el));
   window.__stopDust=()=>run=false;
 })();
 
-/* ============ TRILHA ============
-   1º: arquivo próprio (CONFIG.musicFile) — toca no toque de "Abrir convite", inclusive no iPhone.
-   2º: se o arquivo não existir, usa o player oficial do YouTube. */
-let playing = false, mode = "file", ytPlayer = null, ytReady = false, wantPlay = false;
+/* ============ TRILHA (só áudio, sem vídeo) ============
+   1º: arquivo próprio (CONFIG.musicFile) — toca no toque de "Abrir convite".
+   2º: se não houver arquivo, toca um instrumental funk-pop original gerado pelo navegador. */
+let playing = false, mode = "file";
 const audio = new Audio(); audio.loop = true; audio.preload = "auto"; audio.volume = .8;
-audio.addEventListener("play",  () => { playing = true;  syncMusic(); });
-audio.addEventListener("pause", () => { playing = false; syncMusic(); });
-audio.addEventListener("error", () => { if(mode === "file") useYouTube(); });
+audio.addEventListener("play",  () => { if(mode === "file"){ playing = true;  syncMusic(); } });
+audio.addEventListener("pause", () => { if(mode === "file"){ playing = false; syncMusic(); } });
+audio.addEventListener("error", () => { if(mode === "file"){ mode = "synth"; if(wantPlay) Funk.start(); } });
 audio.src = CONFIG.musicFile;
-function useYouTube(){
-  if(mode === "yt") return; mode = "yt";
-  $("#festa .yt").hidden = false; $("#ytTitle").innerHTML = "<b>Uptown Funk</b> · Mark Ronson ft. Bruno Mars";
-  window.onYouTubeIframeAPIReady = () => {
-    ytPlayer = new YT.Player("yt", { videoId: CONFIG.youtubeFallback,
-      playerVars: { playsinline: 1, rel: 0, loop: 1, playlist: CONFIG.youtubeFallback, modestbranding: 1 },
-      events: { onReady: () => { ytReady = true; ytPlayer.setVolume(70); if(wantPlay) ytPlayer.playVideo(); },
-                onStateChange: e => { playing = e.data === 1; syncMusic(); } } });
+let wantPlay = false;
+
+const Funk = (() => {
+  let ctx, master, rev, noiseBuf, timer, step = 0, nextT = 0, on = false;
+  const BPM = 114, S16 = 60 / BPM / 4;
+  const mtof = m => 440 * Math.pow(2, (m - 69) / 12);
+  // vamp funk: Em7 – A7 – Em7 – A7 – Cmaj7 – Bm7 – Em7 – A7
+  const PROG = [
+    {r:40, v:[55,59,62,66]}, {r:45, v:[55,59,61,66]}, {r:40, v:[55,59,62,66]}, {r:45, v:[55,59,61,67]},
+    {r:36, v:[55,59,64,67]}, {r:47, v:[54,57,62,66]}, {r:40, v:[55,59,62,66]}, {r:45, v:[55,57,61,64]}
+  ];
+  const BASS = [0,null,null,12, null,null,0,null, 0,null,10,null, 12,null,7,10];
+  const STAB = [3,6,11,14];
+  const HOOK = [[0,76],[3,79],[6,81],[8,79],[10,76],[12,74],[14,76]];
+  const HOOK2 = [[0,79],[2,81],[4,83],[6,81],[8,79],[11,76],[14,74]];
+  function impulse(sec){const r=ctx.sampleRate,l=r*sec,b=ctx.createBuffer(2,l,r);for(let c=0;c<2;c++){const d=b.getChannelData(c);for(let i=0;i<l;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/l,3)}return b}
+  function init(){
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
+    master = ctx.createGain(); master.gain.value = 0;
+    const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -16; comp.ratio.value = 4;
+    master.connect(comp).connect(ctx.destination);
+    rev = ctx.createConvolver(); rev.buffer = impulse(1.6); const wet = ctx.createGain(); wet.gain.value = .25; rev.connect(wet).connect(master);
+    noiseBuf = ctx.createBuffer(1, ctx.sampleRate * .5, ctx.sampleRate); const d = noiseBuf.getChannelData(0); for(let i=0;i<d.length;i++) d[i] = Math.random()*2-1;
+  }
+  function out(n, dry=1, send=.2){ const g=ctx.createGain(); g.gain.value=dry; n.connect(g).connect(master); const s=ctx.createGain(); s.gain.value=send; n.connect(s).connect(rev); }
+  function kick(t){ const o=ctx.createOscillator(), g=ctx.createGain(); o.frequency.setValueAtTime(150,t); o.frequency.exponentialRampToValueAtTime(45,t+.12); g.gain.setValueAtTime(.55,t); g.gain.exponentialRampToValueAtTime(.001,t+.32); o.connect(g); out(g,1,0); o.start(t); o.stop(t+.35); }
+  function clap(t){ [0,.011,.022].forEach((d,i) => { const s=ctx.createBufferSource(); s.buffer=noiseBuf; const f=ctx.createBiquadFilter(); f.type="bandpass"; f.frequency.value=1500; f.Q.value=.9; const g=ctx.createGain(); g.gain.setValueAtTime(i===2?.22:.14,t+d); g.gain.exponentialRampToValueAtTime(.001,t+d+(i===2?.2:.03)); s.connect(f).connect(g); out(g,.9,.35); s.start(t+d); s.stop(t+d+.22); }); }
+  function hat(t,open){ const s=ctx.createBufferSource(); s.buffer=noiseBuf; const f=ctx.createBiquadFilter(); f.type="highpass"; f.frequency.value=8000; const g=ctx.createGain(); const len=open?.18:.04; g.gain.setValueAtTime(open?.05:.035,t); g.gain.exponentialRampToValueAtTime(.0005,t+len); s.connect(f).connect(g); out(g,.8,.05); s.start(t); s.stop(t+len+.02); }
+  function bass(m,t,len){ const o=ctx.createOscillator(), o2=ctx.createOscillator(), f=ctx.createBiquadFilter(), g=ctx.createGain();
+    o.type="sawtooth"; o2.type="square"; o.frequency.value=mtof(m); o2.frequency.value=mtof(m)/2;
+    f.type="lowpass"; f.Q.value=6; f.frequency.setValueAtTime(1400,t); f.frequency.exponentialRampToValueAtTime(220,t+.12);
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.2,t+.005); g.gain.exponentialRampToValueAtTime(.06,t+len*.7); g.gain.linearRampToValueAtTime(0,t+len);
+    const g2=ctx.createGain(); g2.gain.value=.5; o.connect(f); o2.connect(g2).connect(f); f.connect(g); out(g,1,0); [o,o2].forEach(x=>{x.start(t); x.stop(t+len+.02)}); }
+  function stab(notes,t){ const f=ctx.createBiquadFilter(), g=ctx.createGain(); f.type="bandpass"; f.Q.value=1.2; f.frequency.setValueAtTime(2600,t); f.frequency.exponentialRampToValueAtTime(900,t+.1);
+    notes.forEach(n => [-6,6].forEach(dt => { const o=ctx.createOscillator(); o.type="sawtooth"; o.frequency.value=mtof(n+12); o.detune.value=dt; o.connect(f); o.start(t); o.stop(t+.16); }));
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.06,t+.004); g.gain.exponentialRampToValueAtTime(.001,t+.14); f.connect(g); out(g,.9,.3); }
+  function brass(m,t,len){ const f=ctx.createBiquadFilter(), g=ctx.createGain(); f.type="lowpass"; f.Q.value=2; f.frequency.setValueAtTime(600,t); f.frequency.linearRampToValueAtTime(3200,t+.06); f.frequency.exponentialRampToValueAtTime(1200,t+len);
+    [0,-8,8].forEach(dt => { const o=ctx.createOscillator(); o.type="sawtooth"; o.frequency.value=mtof(m); o.detune.value=dt; o.connect(f); o.start(t); o.stop(t+len+.05); });
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.05,t+.03); g.gain.setValueAtTime(.05,t+len*.7); g.gain.linearRampToValueAtTime(0,t+len); f.connect(g); out(g,.9,.45); }
+  function schedule(i,t){
+    const bar = Math.floor(i/16), pos = i % 16, c = PROG[bar % 8], sec = bar % 16;
+    const swing = (pos % 2) ? S16 * .12 : 0; t += swing;
+    const full = bar >= 1, breakdown = sec === 15 && pos >= 8;
+    // bateria
+    if(full && !breakdown){ if(pos===0||pos===7||pos===10) kick(t); if(pos===4||pos===12) clap(t); }
+    if(breakdown && pos % 2 === 0) clap(t);
+    hat(t, pos === 14);
+    // baixo
+    if(full && BASS[pos] !== null && !breakdown) bass(c.r + BASS[pos], t, S16 * (pos===0||pos===8 ? 1.8 : .9));
+    // acordes "chk"
+    if(STAB.includes(pos)) stab(c.v, t);
+    // metais (hook original) a partir do compasso 4, a cada 2 compassos
+    if(bar >= 4 && bar % 2 === 0){ const hk = (Math.floor(bar/8) % 2) ? HOOK2 : HOOK; const n = hk.find(x => x[0] === pos); if(n) brass(n[1], t, S16 * 1.6); }
+  }
+  function loop(){ while(nextT < ctx.currentTime + .15){ schedule(step, nextT); nextT += S16; step++; } }
+  return {
+    start(){ if(!ctx) init(); ctx.resume(); if(on) return; on = true; playing = true; syncMusic(); nextT = ctx.currentTime + .06; timer = setInterval(loop, 25);
+      master.gain.cancelScheduledValues(ctx.currentTime); master.gain.setValueAtTime(master.gain.value, ctx.currentTime); master.gain.linearRampToValueAtTime(.6, ctx.currentTime + 1.2); },
+    stop(){ if(!ctx || !on) return; on = false; playing = false; syncMusic();
+      master.gain.cancelScheduledValues(ctx.currentTime); master.gain.setValueAtTime(master.gain.value, ctx.currentTime); master.gain.linearRampToValueAtTime(0, ctx.currentTime + .4);
+      setTimeout(() => { if(!on){ clearInterval(timer); ctx.suspend(); } }, 500); }
   };
-  const s = document.createElement("script"); s.src = "https://www.youtube.com/iframe_api"; document.head.appendChild(s);
-}
+})();
+
 const Music = {
   start(){
     wantPlay = true;
-    if(mode === "file") audio.play().catch(err => { if(err && err.name === "NotSupportedError") useYouTube(); });
-    else if(ytReady) ytPlayer.playVideo();
+    if(mode === "file") audio.play().catch(err => { if(err && err.name === "NotSupportedError"){ mode = "synth"; Funk.start(); } });
+    else Funk.start();
   },
-  stop(){ wantPlay = false; if(mode === "file") audio.pause(); else if(ytReady) ytPlayer.pauseVideo(); },
+  stop(){ wantPlay = false; if(mode === "file") audio.pause(); else Funk.stop(); },
   get playing(){ return playing; }
 };
 const musicBtn = $("#music");
-function syncMusic(){
-  musicBtn.classList.toggle("playing", playing); $(".yt-cap").classList.toggle("playing", playing);
-  $("#musicLbl").textContent = playing ? "Pausar" : "Tocar música";
-  $("#trackBtn").textContent = playing ? "❚❚ Pausar" : "▶ Tocar";
-}
-$("#ytTitle").innerHTML = "<b>" + esc(CONFIG.musicTitle) + "</b>";
-$("#trackBtn").onclick = () => playing ? Music.stop() : Music.start();
-musicBtn.onclick = () => {
-  if(playing){ Music.stop(); return; }
-  Music.start();
-  setTimeout(() => { if(!playing){ $("#festa .panel").scrollIntoView({behavior:"smooth", block:"center"}); toast("Toque no play para ouvir 🎶"); } }, 1500);
-};
+function syncMusic(){ musicBtn.classList.toggle("playing", playing); $("#musicLbl").textContent = playing ? "Pausar" : "Tocar música"; }
+musicBtn.onclick = () => { playing ? Music.stop() : Music.start(); };
 document.addEventListener("visibilitychange", () => { if(document.hidden && playing) Music.stop(); });
 
 $("#openBtn").onclick = () => {
   try { Music.start(); } catch(e) {}
   const a = $("#abertura"); a.classList.add("open");
   setTimeout(() => { a.classList.add("out"); document.body.classList.remove("locked"); musicBtn.classList.add("show"); syncMusic(); window.__stopDust(); }, 1200);
-  setTimeout(() => { if(!playing) toast("Toque em ▶ Tocar música para ouvir 🎶"); }, 3500);
+  setTimeout(() => { if(!playing) toast("Toque em “Tocar música” para ouvir 🎶"); }, 3500);
 };
 
 /* ============ ARMAZENAMENTO DAS CONFIRMAÇÕES ============
@@ -642,10 +641,6 @@ function render(){
   $("#pPeople").textContent = confs.reduce((s,g) => s + (CONF[g.id].total||0), 0);
   $("#pBar").style.width = (confs.length / GUESTS.length * 100) + "%";
 
-  const notes = GUESTS.map(g => CONF[g.id]).filter(c => c && c.mensagem).sort((a,b) => b.criado_em.localeCompare(a.criado_em));
-  $("#wall").innerHTML = notes.length
-    ? notes.map(c => `<div class="note"><p>${esc(c.mensagem)}</p><small>— ${esc(titleOf(GUESTS.find(g => g.id === c.convidado_id)))}</small></div>`).join("")
-    : `<div class="empty">Ainda sem recados. Confirme sua presença e deixe o primeiro! 💛</div>`;
 }
 async function refresh(){
   try {
@@ -714,7 +709,7 @@ function openRsvp(g){
     <p class="hint">Marque quem vai. ${g.nomes.length>1 ? "Se alguém não puder, é só desmarcar." : ""}</p>
     <div class="picks">${g.nomes.map((n,i) => `<label class="pick"><input type="checkbox" value="${esc(n)}" checked><span>${esc(n)}</span></label>`).join("")}</div>
     ${g.extra ? `<div class="stepper"><div><b style="font-size:15px">Acompanhantes</b><div class="hint" style="font-size:13px">a “companhia” 😉</div></div><div class="ctr"><button type="button" data-s="-1" aria-label="Menos">−</button><output id="ex">0</output><button type="button" data-s="1" aria-label="Mais">+</button></div></div>` : ""}
-    <label class="f" for="msg">Recado para o mural (opcional)</label>
+    <label class="f" for="msg">Recado para o Douglas (opcional)</label>
     <textarea id="msg" maxlength="280" placeholder="Deixe um carinho, um parabéns…"></textarea>
     <div class="warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01" stroke-linecap="round"/></svg><span>Depois de confirmar, a resposta fica registrada e não pode ser alterada por aqui. Precisa mudar algo? Fale direto com o Douglas.</span></div>
     <div class="err" id="err"></div>
