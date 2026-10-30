@@ -9,3 +9,7 @@ Landing page estática do convite de aniversário (07/11, 15h30 às 20h, salão 
 
 ## Deploy na Vercel
 Importar o repositório como projeto estático (Framework: Other, sem build command, output = raiz).
+
+## Links pessoais
+Abra o site com `?links=1` no final (ex.: `https://SEU-DOMINIO/?links=1`) para ver o link de cada família, com botões de copiar e enviar no WhatsApp.
+Quem abre o próprio link (`?c=<id>`) já vê o nome no convite e o próprio cartão de confirmação no topo da lista.

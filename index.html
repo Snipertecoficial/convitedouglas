@@ -183,7 +183,7 @@ section{position:relative;padding:clamp(72px,11vw,130px) 0}
 .g .names{font-family:var(--serif);font-size:20px;font-weight:600;line-height:1.3}
 .g .badge{font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;padding:5px 10px;border-radius:999px;border:1px solid var(--line);color:var(--gold);white-space:nowrap}
 .g .people{display:flex;flex-wrap:wrap;gap:6px}
-.g .people span{font-size:13px;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.04);color:var(--muted)}
+.g .people span{font-size:14.5px;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.04);color:var(--muted)}
 .g .people span.in{background:rgba(127,199,154,.14);color:#cdebd8}
 .g .people span.out{text-decoration:line-through;opacity:.5}
 .g .act{margin-top:auto}
@@ -192,6 +192,41 @@ section{position:relative;padding:clamp(72px,11vw,130px) 0}
 .g .done svg{width:26px;height:26px;flex:none}
 .g .done small{display:block;color:var(--dim);font-weight:500;font-size:12.5px}
 .g .lock{position:absolute;top:22px;right:22px;color:var(--ok)}
+.steps{display:flex;gap:10px;flex-wrap:wrap;margin-top:34px}
+.steps span{display:flex;align-items:center;gap:10px;padding:10px 16px 10px 10px;border-radius:999px;background:rgba(214,175,96,.06);border:1px solid var(--line);font-size:14px;color:var(--ink)}
+.steps b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--gold);color:#1b1408;font-size:13px}
+.findbox{margin-top:26px;padding:20px;border-radius:20px;border:1px solid var(--line2);background:linear-gradient(180deg,#1b160e,#120f0a)}
+.findbox label{display:block;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.findbox .search{min-height:58px;border-color:var(--line2);background:#0d0b08}
+.findbox .search input{font-size:18px}
+.toolbar{margin:16px 0 22px}
+mark{background:rgba(246,224,164,.28);color:var(--gold-hi);border-radius:4px;padding:0 2px}
+#mine:empty{display:none}
+#mine{margin:30px 0 8px}
+#mine .lbl{font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;display:flex;align-items:center;gap:10px}
+#mine .lbl::after{content:"";flex:1;height:1px;background:var(--line)}
+#mine .g{border:1.5px solid var(--gold);box-shadow:0 0 0 6px rgba(214,175,96,.08),0 30px 60px -30px rgba(214,175,96,.4);padding:28px}
+#mine .g .names{font-size:clamp(24px,3vw,30px)}
+#mine .g.ok{border-color:rgba(127,199,154,.7);box-shadow:0 0 0 6px rgba(127,199,154,.08)}
+.listlbl{font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted);margin:30px 0 12px}
+.g.hit{border-color:var(--gold);box-shadow:0 0 0 4px rgba(214,175,96,.12)}
+.g .act .btn-line{color:var(--gold-hi)}
+.g.hit .act .btn-line{background:linear-gradient(180deg,#f3d891,#c99a44);color:#1b1408;border-color:transparent}
+.notfound{margin-top:18px;padding:16px 20px;border-radius:14px;border:1px dashed var(--line);font-size:14.5px;color:var(--muted)}
+.notfound a{color:var(--gold-hi);font-weight:600}
+.forwho{display:inline-block;margin-bottom:18px;padding:8px 16px;border-radius:999px;border:1px solid var(--line2);background:rgba(10,9,7,.6);backdrop-filter:blur(6px);font-size:14px;color:var(--gold-hi)}
+.forwho:empty{display:none}
+#cta{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));z-index:79;transform:translate(-50%,140%);transition:transform .45s cubic-bezier(.2,.7,.2,1);box-shadow:0 18px 40px -10px rgba(0,0,0,.8),0 10px 30px -10px rgba(214,175,96,.6)}
+#cta.on{transform:translate(-50%,0)}
+@media (max-width:760px){
+  #cta{left:16px;right:16px;transform:translateY(140%)}#cta.on{transform:none}
+  .steps span{font-size:13px;padding:6px 12px 6px 6px}
+}
+.links li{list-style:none;padding:12px 0;border-bottom:1px solid var(--line);display:grid;gap:8px}
+.links li b{font-family:var(--serif)}
+.links code{font-size:12px;color:var(--muted);word-break:break-all}
+.links .r{display:flex;gap:8px}
+.links .r .btn{min-height:40px;padding:8px 14px;font-size:13px}
 .empty{grid-column:1/-1;text-align:center;padding:40px;color:var(--dim);font-family:var(--body);font-style:italic;font-size:20px}
 .mode-note{margin-top:18px;font-size:13px;color:var(--dim)}
 
@@ -243,6 +278,7 @@ footer .credit{margin-top:46px;font-size:12px;color:var(--dim);letter-spacing:.0
 @keyframes eq{50%{height:16px}}
 .toast{position:fixed;left:50%;top:18px;z-index:120;transform:translate(-50%,-30px);opacity:0;padding:14px 20px;border-radius:14px;background:#1c170f;border:1px solid var(--line2);font-size:14px;font-weight:600;transition:.4s;max-width:calc(100% - 32px)}
 .toast.on{opacity:1;transform:translate(-50%,0)}
+@media (max-width:760px){#music{top:calc(12px + env(safe-area-inset-top));bottom:auto;right:12px;padding:10px 12px}#music #musicLbl{display:none}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
 </style>
 </head>
@@ -255,7 +291,7 @@ footer .credit{margin-top:46px;font-size:12px;color:var(--dim);letter-spacing:.0
   <div class="seal-box">
     <div class="seal"><span>DN</span></div>
     <h1>VOCÊ RECEBEU UM CONVITE</h1>
-    <p>Douglas Nogueira · 35 anos</p>
+    <p id="sealGreet">Douglas Nogueira · 35 anos</p>
     <button class="btn btn-gold" id="openBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
       Abrir convite
@@ -269,6 +305,7 @@ footer .credit{margin-top:46px;font-size:12px;color:var(--dim);letter-spacing:.0
   <div class="hero-photo"><img src="img/retrato.jpg" alt="Douglas Nogueira de terno, braços cruzados"></div>
   <div class="beam b1"></div><div class="beam b2"></div>
   <div class="hero-txt">
+    <div class="forwho" id="heroFor"></div>
     <div class="k">CONVITE DE</div>
     <div class="big gold">ANIVERSÁRIO</div>
     <div class="rule"><i></i></div>
@@ -283,7 +320,7 @@ footer .credit{margin-top:46px;font-size:12px;color:var(--dim);letter-spacing:.0
       <div class="cd"><b data-u="s">0</b><small>seg</small></div>
     </div>
     <div class="hero-cta">
-      <a class="btn btn-gold" href="#lista">Confirmar presença</a>
+      <a class="btn btn-gold" href="#lista" data-go>Confirmar presença</a>
       <a class="btn btn-line" href="#detalhes">Ver detalhes</a>
     </div>
   </div>
@@ -418,13 +455,21 @@ footer .credit{margin-top:46px;font-size:12px;color:var(--dim);letter-spacing:.0
         <div class="nums" style="margin-top:12px"><span>Pessoas confirmadas</span><span id="pPeople" style="color:var(--gold-hi);font-weight:700">0</span></div>
       </div>
     </div>
+    <div class="steps reveal" aria-label="Como confirmar">
+      <span><b>1</b>Encontre seu nome</span><span><b>2</b>Marque quem vai</span><span><b>3</b>Avise o Douglas no WhatsApp</span>
+    </div>
+    <div id="mine"></div>
+    <div class="findbox" id="findbox">
+      <label for="q" id="qLbl">Digite seu nome</label>
+      <div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" type="search" placeholder="Ex.: Miguel, Tia Soli, Camila…" autocomplete="off" enterkeyhint="search"></div>
+    </div>
     <div class="toolbar">
       <button class="chip" data-f="all" aria-pressed="true">Todos</button>
       <button class="chip" data-f="pend" aria-pressed="false">Pendentes</button>
       <button class="chip" data-f="ok" aria-pressed="false">Confirmados</button>
-      <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" type="search" placeholder="Buscar seu nome…" autocomplete="off"></label>
     </div>
     <div class="guests" id="guests"></div>
+    <div class="notfound" id="notfound" hidden>Não encontrou seu nome? <a id="nfLink" target="_blank" rel="noopener">Fale com o Douglas no WhatsApp</a> que ele te inclui.</div>
     <p class="mode-note" id="modeNote"></p>
   </div>
 </section>
@@ -440,6 +485,7 @@ footer .credit{margin-top:46px;font-size:12px;color:var(--dim);letter-spacing:.0
   </div>
 </footer>
 
+<a class="btn btn-gold" id="cta" href="#lista" data-go>Confirmar presença</a>
 <button id="music" aria-label="Pausar ou tocar a música"><span class="eq"><i></i><i></i><i></i><i></i></span><span id="musicLbl">Música</span></button>
 
 <div class="modal" id="modal" aria-modal="true" role="dialog"><div class="sheet" id="sheet"></div></div>
@@ -470,13 +516,18 @@ const GUESTS = [
   {id:"vancleiton",             nomes:["Vancleiton"],                            tag:"Convidado"},
   {id:"felipe-carol-bernardo",  nomes:["Felipe","Carol","Bernardo"],             tag:"Família"},
   {id:"allan-mariely-maryjane", nomes:["Allan","Mariely","MaryJane"],            tag:"Família"},
-  {id:"marcio-lucia",           nomes:["Marcio","Lucia"],                        tag:"Família"}
+  {id:"marcio-lucia",           nomes:["Marcio","Lucia"],                        tag:"Família"},
+  {id:"valdir-andreia-camila",  nomes:["Tio Valdir","Tia Andreia","Camila"],     tag:"Família"}
 ];
+const norm = s => String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\b(tio|tia)\s+/g,"").trim();
+GUESTS.sort((a,b) => norm(titleOf(a)).localeCompare(norm(titleOf(b))));
+/* link pessoal: ?c=<id> — cada família recebe o seu */
+const MY = (() => { const id = new URLSearchParams(location.search).get("c"); return GUESTS.find(g => g.id === id) || null; })();
 
 /* ============ UTIL ============ */
 const $ = (s, el=document) => el.querySelector(s);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const titleOf = g => g.titulo || (g.nomes.length > 1 ? g.nomes.slice(0,-1).join(", ") + " e " + g.nomes.at(-1) : g.nomes[0]);
+function titleOf(g){ return g.titulo || (g.nomes.length > 1 ? g.nomes.slice(0,-1).join(", ") + " e " + g.nomes.at(-1) : g.nomes[0]); }
 const fmtDate = iso => new Date(iso).toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit",timeZone:"America/Sao_Paulo"});
 const closed = () => Date.now() > new Date(CONFIG.deadline).getTime();
 function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("on");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("on"),3600)}
@@ -630,29 +681,38 @@ let CONF = {}; let filter = "all";
 const CACHE = "dn35-cache";
 try { (JSON.parse(localStorage.getItem(CACHE) || "[]")).forEach(c => CONF[c.convidado_id] = c); } catch {}
 
+function hl(text, q){
+  if(!q) return esc(text);
+  const n = text.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+  const i = n.indexOf(q); if(i < 0) return esc(text);
+  return esc(text.slice(0,i)) + "<mark>" + esc(text.slice(i, i+q.length)) + "</mark>" + esc(text.slice(i+q.length));
+}
+function cardHTML(g, q, featured){
+  const c = CONF[g.id]; const isClosed = closed();
+  const people = g.nomes.map(n => `<span class="${c ? (c.nomes.includes(n) ? "in" : "out") : ""}">${hl(n,q)}</span>`).join("") +
+    (c && c.acompanhantes ? `<span class="in">+${c.acompanhantes} acompanhante${c.acompanhantes>1?"s":""}</span>` : "");
+  const act = c
+    ? `<div class="done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m7.5 12.5 3 3 6-6.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div>Presença confirmada · ${c.total} pessoa${c.total>1?"s":""}<small>em ${fmtDate(c.criado_em)}</small></div></div>`
+    : isClosed ? `<div class="done" style="color:var(--dim)">Prazo de confirmação encerrado</div>`
+    : `<button class="btn ${featured ? "btn-gold" : "btn-line"}" data-id="${g.id}">${featured ? "Confirmar nossa presença" : "Sou eu · Confirmar"}</button>`;
+  return `<article class="g ${c ? "ok" : ""} ${q && !featured ? "hit" : ""}" id="g-${g.id}">
+    <div class="top"><div class="names">${hl(titleOf(g),q)}</div>${c ? `<svg class="lock" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>` : `<span class="badge">${esc(g.tag)}</span>`}</div>
+    <div class="people">${people}</div>
+    <div class="act">${act}</div></article>`;
+}
 function render(){
-  const q = $("#q").value.trim().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
-  const box = $("#guests"); const isClosed = closed();
+  const q = norm($("#q").value);
+  $("#mine").innerHTML = MY ? `<div class="lbl">Seu convite</div>${cardHTML(MY, "", true)}` : "";
   const list = GUESTS.filter(g => {
+    if(MY && g.id === MY.id) return false;
     const c = CONF[g.id];
     if(filter === "ok" && !c) return false;
     if(filter === "pend" && c) return false;
-    if(q && !titleOf(g).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").includes(q)) return false;
+    if(q && ![titleOf(g), ...g.nomes].some(t => norm(t).includes(q))) return false;
     return true;
   });
-  box.innerHTML = list.length ? list.map(g => {
-    const c = CONF[g.id];
-    const people = g.nomes.map(n => `<span class="${c ? (c.nomes.includes(n) ? "in" : "out") : ""}">${esc(n)}</span>`).join("") +
-      (c && c.acompanhantes ? `<span class="in">+${c.acompanhantes} acompanhante${c.acompanhantes>1?"s":""}</span>` : "");
-    const act = c
-      ? `<div class="done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m7.5 12.5 3 3 6-6.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div>Presença confirmada · ${c.total} pessoa${c.total>1?"s":""}<small>em ${fmtDate(c.criado_em)}</small></div></div>`
-      : isClosed ? `<div class="done" style="color:var(--dim)">Prazo de confirmação encerrado</div>`
-      : `<button class="btn btn-gold" data-id="${g.id}">Confirmar presença</button>`;
-    return `<article class="g ${c ? "ok" : ""}">
-      <div class="top"><div class="names">${esc(titleOf(g))}</div>${c ? `<svg class="lock" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>` : `<span class="badge">${esc(g.tag)}</span>`}</div>
-      <div class="people">${people}</div>
-      <div class="act">${act}</div></article>`;
-  }).join("") : `<div class="empty">Nenhum convite encontrado.</div>`;
+  $("#guests").innerHTML = list.length ? list.map(g => cardHTML(g, q, false)).join("") : `<div class="empty">Nenhum convite com esse nome.</div>`;
+  $("#notfound").hidden = !(q && q.length >= 3 && !list.length);
 
   const confs = GUESTS.filter(g => CONF[g.id]);
   $("#pConf").textContent = confs.length;
@@ -665,16 +725,56 @@ async function refresh(){
     const rows = await Store.list(); CONF = {}; rows.forEach(r => CONF[r.convidado_id] = r);
     try { localStorage.setItem(CACHE, JSON.stringify(rows)); } catch {}
   } catch(e) { console.warn(e); }
-  render();
+  render(); window.__updCta && window.__updCta();
 }
 $("#modeNote").textContent = Store.live ? "" : "Modo de pré-visualização: as confirmações ficam só neste navegador até o banco de dados ser conectado.";
 document.querySelectorAll(".chip").forEach(b => b.onclick = () => { filter = b.dataset.f; document.querySelectorAll(".chip").forEach(x => x.setAttribute("aria-pressed", x === b)); render(); });
 $("#q").oninput = render;
-$("#guests").onclick = e => { const b = e.target.closest("[data-id]"); if(b) openRsvp(GUESTS.find(g => g.id === b.dataset.id)); };
+$("#lista").addEventListener("click", e => { const b = e.target.closest("[data-id]"); if(b) openRsvp(GUESTS.find(g => g.id === b.dataset.id)); });
+$("#nfLink").href = "https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent("Oi Douglas! Abri o convite do seu aniversário mas não achei meu nome na lista 🙈");
+
+/* personalização pelo link */
+if(MY){
+  const t = titleOf(MY);
+  $("#sealGreet").textContent = t + ", este convite é para " + (MY.nomes.length > 1 ? "vocês" : "você");
+  $("#heroFor").textContent = "Convite especial para " + t;
+  $("#qLbl").textContent = "Procurando outra pessoa?";
+  $("#findbox").style.marginTop = "18px";
+}
+/* botões "Confirmar presença": levam direto ao convite certo */
+document.querySelectorAll("[data-go]").forEach(a => a.addEventListener("click", e => {
+  e.preventDefault();
+  const target = MY ? $("#mine") : $("#findbox");
+  target.scrollIntoView({behavior:"smooth", block: MY ? "center" : "start"});
+  if(!MY && matchMedia("(pointer:fine)").matches) setTimeout(() => $("#q").focus({preventScroll:true}), 700);
+}));
+/* barra fixa de confirmação: aparece depois do topo e some quando a lista está na tela */
+(() => {
+  let pastHero = false, listOn = false; const cta = $("#cta");
+  const upd = () => { const on = pastHero && !listOn && !(MY && CONF[MY.id]); cta.classList.toggle("on", on); document.body.classList.toggle("cta-on", on); };
+  new IntersectionObserver(([e]) => { pastHero = !e.isIntersecting; upd(); }).observe($(".hero"));
+  new IntersectionObserver(([e]) => { listOn = e.isIntersecting; upd(); }, {rootMargin:"0px 0px -30% 0px"}).observe($("#lista"));
+  window.__updCta = upd;
+})();
+/* painel de links pessoais para o Douglas: abra a página com ?links=1 */
+if(new URLSearchParams(location.search).has("links")){
+  const base = location.origin + location.pathname;
+  setTimeout(() => {
+    sheet.innerHTML = `<div class="eyebrow">Links pessoais</div><h3>Envie um link para cada família</h3>
+      <p class="hint">Quem abre o próprio link já vê o nome no convite e o botão de confirmar no topo da lista.</p>
+      <ul class="links" style="margin-top:14px">${GUESTS.map(g => { const u = base + "?c=" + g.id;
+        const msg = `Olá, ${titleOf(g)}! 🎉 Você está convidado para o meu aniversário de 35 anos, sábado 07/11, das 15h30 às 20h. Confirme sua presença até domingo (01/11) aqui: ${u}`;
+        return `<li><b>${esc(titleOf(g))}</b><code>${esc(u)}</code><div class="r"><button class="btn btn-line" data-copy="${esc(u)}">Copiar link</button><a class="btn btn-wa" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(msg)}">Enviar no WhatsApp</a></div></li>`; }).join("")}</ul>
+      <button class="btn btn-line" style="width:100%;margin-top:16px" onclick="closeModal()">Fechar</button>`;
+    sheet.querySelectorAll("[data-copy]").forEach(b => b.onclick = () => { navigator.clipboard?.writeText(b.dataset.copy).then(() => toast("Link copiado ✔"), () => toast(b.dataset.copy)); });
+    modal.classList.add("on");
+  }, 1300);
+}
 refresh(); setInterval(refresh, 30000);
 
 /* ============ MODAL DE CONFIRMAÇÃO ============ */
 const modal = $("#modal"), sheet = $("#sheet");
+window.closeModal = closeModal;
 function closeModal(){ modal.classList.remove("on"); }
 modal.onclick = e => { if(e.target === modal) closeModal(); };
 addEventListener("keydown", e => { if(e.key === "Escape") closeModal(); });
@@ -682,7 +782,7 @@ addEventListener("keydown", e => { if(e.key === "Escape") closeModal(); });
 function openRsvp(g){
   let extra = 0;
   sheet.innerHTML = `
-    <div class="eyebrow">Confirmação de presença</div>
+    <div class="eyebrow">Confirmando o convite de</div>
     <h3>${esc(titleOf(g))}</h3>
     <p class="hint">Marque quem vai. ${g.nomes.length>1 ? "Se alguém não puder, é só desmarcar." : ""}</p>
     <div class="picks">${g.nomes.map((n,i) => `<label class="pick"><input type="checkbox" value="${esc(n)}" checked><span>${esc(n)}</span></label>`).join("")}</div>
@@ -691,10 +791,12 @@ function openRsvp(g){
     <textarea id="msg" maxlength="280" placeholder="Deixe um carinho, um parabéns…"></textarea>
     <div class="warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01" stroke-linecap="round"/></svg><span>Depois de confirmar, a resposta fica registrada e não pode ser alterada por aqui. Precisa mudar algo? Fale direto com o Douglas.</span></div>
     <div class="err" id="err"></div>
-    <div class="row"><button class="btn btn-line" id="cancel">Voltar</button><button class="btn btn-gold" id="go">Confirmar</button></div>`;
+    <div class="row"><button class="btn btn-line" id="cancel">Não sou eu</button><button class="btn btn-gold" id="go">Confirmar</button></div>`;
   modal.classList.add("on");
-  sheet.querySelectorAll("[data-s]").forEach(b => b.onclick = () => { extra = Math.min(8, Math.max(0, extra + +b.dataset.s)); $("#ex").textContent = extra; });
-  $("#cancel").onclick = closeModal;
+  const label = () => { const n = sheet.querySelectorAll(".picks input:checked").length + extra; const go = $("#go"); go.textContent = n ? `Confirmar ${n} pessoa${n>1?"s":""}` : "Marque quem vai"; go.disabled = !n; };
+  sheet.querySelectorAll("[data-s]").forEach(b => b.onclick = () => { extra = Math.min(8, Math.max(0, extra + +b.dataset.s)); $("#ex").textContent = extra; label(); });
+  sheet.querySelectorAll(".picks input").forEach(i => i.onchange = label);
+  $("#cancel").onclick = closeModal; label();
   $("#go").onclick = async () => {
     const nomes = [...sheet.querySelectorAll(".picks input:checked")].map(i => i.value);
     const total = nomes.length + extra;
