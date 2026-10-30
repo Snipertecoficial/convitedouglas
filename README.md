@@ -2,7 +2,8 @@
 
 Landing page estática do convite de aniversário (07/11, 15h30 às 20h, salão de festas — Rua dos Coqueiros, 709).
 
-- `index.html`: página completa (HTML/CSS/JS, sem build). Música: player oficial do YouTube (Uptown Funk — Mark Ronson ft. Bruno Mars).
+- `index.html`: página completa (HTML/CSS/JS, sem build).
+- Música: coloque seu arquivo como `musica.mp3` na raiz do repositório (toca ao abrir o convite). Sem o arquivo, usa o player oficial do YouTube.
 - `img/`: cartão e retrato.
 - Confirmações: Supabase, projeto `aniversario-douglas-35` (tabela `confirmacoes`, só INSERT — imutável, uma confirmação por convite, prazo 01/11 23h59).
 - Aviso no WhatsApp: botão wa.me para 11 97571-3735; campo `notifyWebhook` no CONFIG para ligar um webhook do n8n.

@@ -134,6 +134,7 @@ section{position:relative;padding:clamp(72px,11vw,130px) 0}
 .panel{padding:24px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(180deg,#17130d,#100d09)}
 .panel h3{font-family:var(--serif);font-size:24px;font-weight:600;margin-bottom:6px}
 .panel .hint{color:var(--muted);font-size:14.5px;margin-bottom:16px}
+.yt[hidden]{display:none}
 .yt{position:relative;aspect-ratio:16/9;border-radius:14px;overflow:hidden;border:1px solid var(--line2);background:#000}
 .yt iframe,.yt>div{position:absolute;inset:0;width:100%;height:100%;border:0}
 .yt-cap{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:13.5px;color:var(--muted)}
@@ -412,8 +413,8 @@ footer .credit{margin-top:46px;font-size:12px;color:var(--dim);letter-spacing:.0
       <div class="panel reveal">
         <h3>Trilha da festa</h3>
         <p class="hint">Pra já ir entrando no clima.</p>
-        <div class="yt"><div id="yt"></div></div>
-        <div class="yt-cap"><span class="eq" id="ytEq"><i></i><i></i><i></i><i></i></span><span><b>Uptown Funk</b> · Mark Ronson ft. Bruno Mars</span></div>
+        <div class="yt" hidden><div id="yt"></div></div>
+        <div class="yt-cap"><span class="eq"><i></i><i></i><i></i><i></i></span><span id="ytTitle"></span><button class="btn btn-line" id="trackBtn" style="margin-left:auto;min-height:40px;padding:8px 16px;font-size:13px">▶ Tocar</button></div>
       </div>
       <div class="panel reveal">
         <h3>Mural de recados</h3>
@@ -431,7 +432,6 @@ footer .credit{margin-top:46px;font-size:12px;color:var(--dim);letter-spacing:.0
     <a class="btn btn-line" id="waContact" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.4-.5c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.3 5.2 4.6.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.3ZM12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Z"/></svg>
       Falar com o Douglas</a>
-    <div class="credit">Música pelo player oficial do YouTube.</div>
   </div>
 </footer>
 
@@ -451,7 +451,10 @@ const CONFIG = {
   event: "2026-11-07T15:30:00-03:00",
   eventEnd: "2026-11-07T20:00:00-03:00",
   deadline: "2026-11-01T23:59:59-03:00",
-  address: "Rua dos Coqueiros, 709"
+  address: "Rua dos Coqueiros, 709",
+  musicFile: "musica.mp3",       // coloque o arquivo de áudio com este nome na raiz do repositório
+  musicTitle: "Bruno Mars",      // texto mostrado na "Trilha da festa"
+  youtubeFallback: "OPf0YbXqDm0" // usado só se o musica.mp3 não existir (Uptown Funk — player oficial)
 };
 
 const GUESTS = [
@@ -517,43 +520,55 @@ document.querySelectorAll(".reveal").forEach(el => io.observe(el));
   window.__stopDust=()=>run=false;
 })();
 
-/* ============ TRILHA (player oficial do YouTube) ============ */
-const YT_ID = "OPf0YbXqDm0"; // Mark Ronson ft. Bruno Mars — Uptown Funk (vídeo oficial)
-let ytPlayer = null, ytReady = false, wantPlay = false, ytPlaying = false;
-window.onYouTubeIframeAPIReady = () => {
-  ytPlayer = new YT.Player("yt", {
-    videoId: YT_ID,
-    playerVars: { playsinline: 1, rel: 0, loop: 1, playlist: YT_ID, modestbranding: 1 },
-    events: {
-      onReady: () => { ytReady = true; ytPlayer.setVolume(70); if(wantPlay) ytPlayer.playVideo(); },
-      onStateChange: e => { ytPlaying = e.data === 1; syncMusic(); }
-    }
-  });
-};
-(() => { const s = document.createElement("script"); s.src = "https://www.youtube.com/iframe_api"; document.head.appendChild(s); })();
+/* ============ TRILHA ============
+   1º: arquivo próprio (CONFIG.musicFile) — toca no toque de "Abrir convite", inclusive no iPhone.
+   2º: se o arquivo não existir, usa o player oficial do YouTube. */
+let playing = false, mode = "file", ytPlayer = null, ytReady = false, wantPlay = false;
+const audio = new Audio(); audio.loop = true; audio.preload = "auto"; audio.volume = .8;
+audio.addEventListener("play",  () => { playing = true;  syncMusic(); });
+audio.addEventListener("pause", () => { playing = false; syncMusic(); });
+audio.addEventListener("error", () => { if(mode === "file") useYouTube(); });
+audio.src = CONFIG.musicFile;
+function useYouTube(){
+  if(mode === "yt") return; mode = "yt";
+  $("#festa .yt").hidden = false; $("#ytTitle").innerHTML = "<b>Uptown Funk</b> · Mark Ronson ft. Bruno Mars";
+  window.onYouTubeIframeAPIReady = () => {
+    ytPlayer = new YT.Player("yt", { videoId: CONFIG.youtubeFallback,
+      playerVars: { playsinline: 1, rel: 0, loop: 1, playlist: CONFIG.youtubeFallback, modestbranding: 1 },
+      events: { onReady: () => { ytReady = true; ytPlayer.setVolume(70); if(wantPlay) ytPlayer.playVideo(); },
+                onStateChange: e => { playing = e.data === 1; syncMusic(); } } });
+  };
+  const s = document.createElement("script"); s.src = "https://www.youtube.com/iframe_api"; document.head.appendChild(s);
+}
 const Music = {
-  start(){ wantPlay = true; if(ytReady) ytPlayer.playVideo(); },
-  stop(){ wantPlay = false; if(ytReady) ytPlayer.pauseVideo(); },
-  get playing(){ return ytPlaying; }
+  start(){
+    wantPlay = true;
+    if(mode === "file") audio.play().catch(err => { if(err && err.name === "NotSupportedError") useYouTube(); });
+    else if(ytReady) ytPlayer.playVideo();
+  },
+  stop(){ wantPlay = false; if(mode === "file") audio.pause(); else if(ytReady) ytPlayer.pauseVideo(); },
+  get playing(){ return playing; }
 };
 const musicBtn = $("#music");
 function syncMusic(){
-  musicBtn.classList.toggle("playing", ytPlaying); $(".yt-cap").classList.toggle("playing", ytPlaying);
-  $("#musicLbl").textContent = ytPlaying ? "Pausar" : "Tocar música";
+  musicBtn.classList.toggle("playing", playing); $(".yt-cap").classList.toggle("playing", playing);
+  $("#musicLbl").textContent = playing ? "Pausar" : "Tocar música";
+  $("#trackBtn").textContent = playing ? "❚❚ Pausar" : "▶ Tocar";
 }
-function goPlayer(){ $("#festa .yt").scrollIntoView({behavior:"smooth", block:"center"}); toast("Toque no play para ouvir 🎶"); }
+$("#ytTitle").innerHTML = "<b>" + esc(CONFIG.musicTitle) + "</b>";
+$("#trackBtn").onclick = () => playing ? Music.stop() : Music.start();
 musicBtn.onclick = () => {
-  if(ytPlaying){ Music.stop(); return; }
+  if(playing){ Music.stop(); return; }
   Music.start();
-  setTimeout(() => { if(!ytPlaying) goPlayer(); }, 1500);
+  setTimeout(() => { if(!playing){ $("#festa .panel").scrollIntoView({behavior:"smooth", block:"center"}); toast("Toque no play para ouvir 🎶"); } }, 1500);
 };
-document.addEventListener("visibilitychange", () => { if(document.hidden && ytPlaying) Music.stop(); });
+document.addEventListener("visibilitychange", () => { if(document.hidden && playing) Music.stop(); });
 
 $("#openBtn").onclick = () => {
   try { Music.start(); } catch(e) {}
   const a = $("#abertura"); a.classList.add("open");
   setTimeout(() => { a.classList.add("out"); document.body.classList.remove("locked"); musicBtn.classList.add("show"); syncMusic(); window.__stopDust(); }, 1200);
-  setTimeout(() => { if(!ytPlaying) toast("Toque em ▶ Tocar música para ouvir 🎶"); }, 3500);
+  setTimeout(() => { if(!playing) toast("Toque em ▶ Tocar música para ouvir 🎶"); }, 3500);
 };
 
 /* ============ ARMAZENAMENTO DAS CONFIRMAÇÕES ============
