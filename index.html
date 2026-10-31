@@ -410,7 +410,7 @@ const CONFIG = {
   eventEnd: "2026-11-07T20:00:00-03:00",
   deadline: "2026-11-01T23:59:59-03:00",
   address: "Rua dos Coqueiros, 709",
-  musicFile: "musica.mp3"   // se existir na raiz, toca este arquivo; senão toca o instrumental funk gerado pela página
+  musicFile: "musica.mp3"   // se existir na raiz, toca este arquivo; senão toca o instrumental pop anos 80 gerado pela página
 };
 
 const GUESTS = [
@@ -478,7 +478,7 @@ document.querySelectorAll(".reveal").forEach(el => io.observe(el));
 
 /* ============ TRILHA (só áudio, sem vídeo) ============
    1º: arquivo próprio (CONFIG.musicFile) — toca no toque de "Abrir convite".
-   2º: se não houver arquivo, toca um instrumental funk-pop original gerado pelo navegador. */
+   2º: se não houver arquivo, toca um instrumental pop anos 80 original (117 BPM) gerado pelo navegador. */
 let playing = false, mode = "file";
 const audio = new Audio(); audio.loop = true; audio.preload = "auto"; audio.volume = .8;
 audio.addEventListener("play",  () => { if(mode === "file"){ playing = true;  syncMusic(); } });
@@ -489,17 +489,17 @@ let wantPlay = false;
 
 const Funk = (() => {
   let ctx, master, rev, noiseBuf, timer, step = 0, nextT = 0, on = false;
-  const BPM = 114, S16 = 60 / BPM / 4;
+  const BPM = 117, S16 = 60 / BPM / 4;   // pop dançante anos 80 — composição original
   const mtof = m => 440 * Math.pow(2, (m - 69) / 12);
-  // vamp funk: Em7 – A7 – Em7 – A7 – Cmaj7 – Bm7 – Em7 – A7
+  // Am7 – Fmaj7 – G – Em7 | Am7 – Fmaj7 – G – Gsus
   const PROG = [
-    {r:40, v:[55,59,62,66]}, {r:45, v:[55,59,61,66]}, {r:40, v:[55,59,62,66]}, {r:45, v:[55,59,61,67]},
-    {r:36, v:[55,59,64,67]}, {r:47, v:[54,57,62,66]}, {r:40, v:[55,59,62,66]}, {r:45, v:[55,57,61,64]}
+    {r:45, v:[55,60,64,67]}, {r:41, v:[53,57,60,64]}, {r:43, v:[55,59,62,67]}, {r:40, v:[55,59,62,64]},
+    {r:45, v:[55,60,64,67]}, {r:41, v:[53,57,60,64]}, {r:43, v:[55,59,62,67]}, {r:43, v:[55,60,62,67]}
   ];
-  const BASS = [0,null,null,12, null,null,0,null, 0,null,10,null, 12,null,7,10];
-  const STAB = [3,6,11,14];
-  const HOOK = [[0,76],[3,79],[6,81],[8,79],[10,76],[12,74],[14,76]];
-  const HOOK2 = [[0,79],[2,81],[4,83],[6,81],[8,79],[11,76],[14,74]];
+  const BASS = [0,null,12,null, 0,null,12,null, 0,null,12,null, 0,null,12,7];   // baixo de sintetizador em oitavas
+  const STAB = [6,14];
+  const HOOK  = [[0,76],[2,79],[4,81],[6,79],[8,76],[10,74],[12,72],[14,74]];
+  const HOOK2 = [[0,81],[3,84],[6,83],[8,81],[11,79],[14,76]];
   function impulse(sec){const r=ctx.sampleRate,l=r*sec,b=ctx.createBuffer(2,l,r);for(let c=0;c<2;c++){const d=b.getChannelData(c);for(let i=0;i<l;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/l,3)}return b}
   function init(){
     ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -524,25 +524,31 @@ const Funk = (() => {
   function brass(m,t,len){ const f=ctx.createBiquadFilter(), g=ctx.createGain(); f.type="lowpass"; f.Q.value=2; f.frequency.setValueAtTime(600,t); f.frequency.linearRampToValueAtTime(3200,t+.06); f.frequency.exponentialRampToValueAtTime(1200,t+len);
     [0,-8,8].forEach(dt => { const o=ctx.createOscillator(); o.type="sawtooth"; o.frequency.value=mtof(m); o.detune.value=dt; o.connect(f); o.start(t); o.stop(t+len+.05); });
     g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.05,t+.03); g.gain.setValueAtTime(.05,t+len*.7); g.gain.linearRampToValueAtTime(0,t+len); f.connect(g); out(g,.9,.45); }
+  function pad(notes,t,len){ const f=ctx.createBiquadFilter(), g=ctx.createGain(); f.type="lowpass"; f.frequency.value=1500;
+    notes.forEach(n => [-9,9].forEach(dt => { const o=ctx.createOscillator(); o.type="sawtooth"; o.frequency.value=mtof(n); o.detune.value=dt; o.connect(f); o.start(t); o.stop(t+len+.3); }));
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.018,t+.08); g.gain.setValueAtTime(.018,t+len-.05); g.gain.linearRampToValueAtTime(0,t+len+.25); f.connect(g); out(g,.8,.5); }
+  function lead(m,t,len){ const f=ctx.createBiquadFilter(), g=ctx.createGain(); f.type="lowpass"; f.frequency.value=3400; f.Q.value=1;
+    [0,7].forEach(dt => { const o=ctx.createOscillator(); o.type="square"; o.frequency.value=mtof(m); o.detune.value=dt; o.connect(f); o.start(t); o.stop(t+len+.05); });
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.035,t+.01); g.gain.setValueAtTime(.03,t+len*.8); g.gain.linearRampToValueAtTime(0,t+len); f.connect(g); out(g,.8,.5); }
   function schedule(i,t){
     const bar = Math.floor(i/16), pos = i % 16, c = PROG[bar % 8], sec = bar % 16;
-    const swing = (pos % 2) ? S16 * .12 : 0; t += swing;
-    const full = bar >= 1, breakdown = sec === 15 && pos >= 8;
-    // bateria
-    if(full && !breakdown){ if(pos===0||pos===7||pos===10) kick(t); if(pos===4||pos===12) clap(t); }
-    if(breakdown && pos % 2 === 0) clap(t);
-    hat(t, pos === 14);
+    const full = bar >= 2, breakdown = sec === 15 && pos >= 8;
+    // bateria eletrônica: bumbo, palmas anos 80, chimbal em colcheias
+    if(full && !breakdown){ if(pos===0||pos===8||pos===10) kick(t); if(pos===4||pos===12) clap(t); }
+    if(bar >= 1 && breakdown && pos % 2 === 0) clap(t);
+    if(pos % 2 === 0) hat(t, pos === 6 || pos === 14);
     // baixo
-    if(full && BASS[pos] !== null && !breakdown) bass(c.r + BASS[pos], t, S16 * (pos===0||pos===8 ? 1.8 : .9));
-    // acordes "chk"
-    if(STAB.includes(pos)) stab(c.v, t);
-    // metais (hook original) a partir do compasso 4, a cada 2 compassos
-    if(bar >= 4 && bar % 2 === 0){ const hk = (Math.floor(bar/8) % 2) ? HOOK2 : HOOK; const n = hk.find(x => x[0] === pos); if(n) brass(n[1], t, S16 * 1.6); }
+    if(bar >= 1 && BASS[pos] !== null && !breakdown) bass(c.r + BASS[pos], t, S16 * 1.6);
+    // tapete + acordes
+    if(pos === 0) pad(c.v, t, S16 * 16);
+    if(full && STAB.includes(pos)) stab(c.v, t);
+    // tema no sintetizador a partir do compasso 4
+    if(bar >= 4 && bar % 2 === 0){ const hk = (Math.floor(bar/8) % 2) ? HOOK2 : HOOK; const n = hk.find(x => x[0] === pos); if(n) lead(n[1], t, S16 * 1.7); }
   }
   function loop(){ while(nextT < ctx.currentTime + .15){ schedule(step, nextT); nextT += S16; step++; } }
   return {
     start(){ if(!ctx) init(); ctx.resume(); if(on) return; on = true; playing = true; syncMusic(); nextT = ctx.currentTime + .06; timer = setInterval(loop, 25);
-      master.gain.cancelScheduledValues(ctx.currentTime); master.gain.setValueAtTime(master.gain.value, ctx.currentTime); master.gain.linearRampToValueAtTime(.6, ctx.currentTime + 1.2); },
+      master.gain.cancelScheduledValues(ctx.currentTime); master.gain.setValueAtTime(master.gain.value, ctx.currentTime); master.gain.linearRampToValueAtTime(.85, ctx.currentTime + 1.2); },
     stop(){ if(!ctx || !on) return; on = false; playing = false; syncMusic();
       master.gain.cancelScheduledValues(ctx.currentTime); master.gain.setValueAtTime(master.gain.value, ctx.currentTime); master.gain.linearRampToValueAtTime(0, ctx.currentTime + .4);
       setTimeout(() => { if(!on){ clearInterval(timer); ctx.suspend(); } }, 500); }
