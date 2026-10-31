@@ -5,7 +5,7 @@ Landing page estática do convite de aniversário (07/11, 15h30 às 20h, salão 
 - `index.html`: página completa (HTML/CSS/JS, sem build).
 - Música: só áudio, sem vídeo. Se existir `musica.mp3` na raiz, toca esse arquivo ao abrir o convite; senão toca um instrumental pop anos 80 original (117 BPM) gerado pela própria página.
 - `img/`: cartão e retrato.
-- Confirmações: Supabase, projeto `aniversario-douglas-35` (tabela `confirmacoes`, só INSERT — imutável, uma confirmação por convite, prazo 01/11 23h59).
+- Confirmações: Supabase, projeto `aniversario-douglas-35` (tabela `confirmacoes`, só INSERT — imutável, uma confirmação por convite, prazo 01/11 23h59). Ao adicionar convidado, incluir o id também na regra `confirmacoes_convidado_id_check` do banco.
 - Aviso no WhatsApp: botão wa.me para 11 97571-3735; campo `notifyWebhook` no CONFIG para ligar um webhook do n8n.
 
 ## Deploy na Vercel
